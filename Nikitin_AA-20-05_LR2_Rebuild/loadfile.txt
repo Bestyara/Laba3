@@ -1,0 +1,32 @@
+Pipe
+0
+123
+321
+Compressor Station
+0
+aboba man
+3
+2
+1
+Pipe
+2
+12
+32
+Compressor Station
+1
+ahahah
+5
+3
+2
+Pipe
+3
+2222
+2222
+Pipe
+4
+3333
+3333
+Pipe
+5
+4444
+4444
