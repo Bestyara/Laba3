@@ -426,10 +426,15 @@ void Network::disconnect() {
 				id = proverkavvodaint();
 			}
 		}
-		CSMap[links[id].incs].conpipe--;
-		CSMap[links[id].outcs].conpipe--;
-		links.erase(id);
-		cout << "Отключение произошло" << endl;
+		if (links.count(id) != 0) {
+			CSMap[links[id].incs].conpipe--;
+			CSMap[links[id].outcs].conpipe--;
+			links.erase(id);
+			cout << "Отключение произошло" << endl;
+		}
+		else {
+			cout << "Труба с данным ID не подключена";
+		}
 	}
 	else {
 		cout << "Связей нет, отключение невозможно"<< endl;
