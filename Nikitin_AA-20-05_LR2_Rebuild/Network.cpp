@@ -405,7 +405,7 @@ void Network::connect() {
 					cout << "Количество подключенных труб между этими КС максимально" << endl;
 			}
 			else
-				cout << endl << "Количество КС меньше 2, подключить трубу нельзя" << endl;
+				cout << endl << "Количество КС меньше 2, подключить трубу нельзя/ID трубы неверный" << endl;
 		}
 		else
 		{
@@ -417,5 +417,21 @@ void Network::connect() {
 }
 
 void Network::disconnect() {
-
+	if (links.size() != 0) {
+		cout << "Введите ID трубы для отключения: " << endl;
+		int id = proverkavvodaint();
+		if (PipeMap.count(id) == 0) {
+			while (PipeMap.count(id) == 0) {
+				cout << "Трубы с данным id не существует, попробуйте еще раз" << endl;
+				id = proverkavvodaint();
+			}
+		}
+		CSMap[links[id].incs].conpipe--;
+		CSMap[links[id].outcs].conpipe--;
+		links.erase(id);
+		cout << "Отключение произошло" << endl;
+	}
+	else {
+		cout << "Связей нет, отключение невозможно"<< endl;
+	}
 }

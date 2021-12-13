@@ -10,8 +10,8 @@ public:
 	int d;
 	int l;
 	bool repair;
-	int inid;
-	int outid;
+	//int inid;
+	//int outid;
 	Pipe();//конструктор
 	friend istream& operator>> (istream&, Pipe& p);//перегрузка ввода
 	friend ostream& operator<< (ostream&, const unordered_map <int, Pipe>&);//перегрузка вывода
