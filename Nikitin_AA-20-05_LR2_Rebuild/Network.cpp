@@ -547,20 +547,10 @@ void Network::topologicsort() {
 				i.second.inpipe = 9999;
 			}
 		}
-		//for (int i = 0; i < links.size(); i++) {//удаляем связи, в которых участвуют вершины из set ans
-		//	for (int j = 0; j < buf.size(); j++) {
-		//		if (links.count(i) != 0) {
-		//			if ((links[i].incs == buf[j]) || (links[i].outcs == buf[j])) {
-		//				if (links[i].incs == buf[j])
-		//					CSMap[links[i].outcs].inpipe--;
-		//				else
-		//					CSMap[links[i].incs].inpipe--;
-		//				links.erase(i);
-		//			}
-		//		}
-		//	}
-		//}
-		//while (CSMap[k].inpipe + CSMap[k].outpipe != 0 && k < CSMap.size()) {
+		if (buf.size() == 0) {
+			cout << "Топологическая сортировка невозможна" << endl;
+			links.clear();
+		}
 		for (auto& i : links) {//удаляем связи, в которых участвуют вершины из ans
 			for (int j = 0; j < buf.size(); j++) {
 				if (links.count(i.first) != 0) {
@@ -590,22 +580,6 @@ void Network::topologicsort() {
 			i.second.inpipe = 9999;
 		}
 	}
-	//while (links.size() != 0) {
-	//	for (auto& i : CSMap) {//записываем вершины, в которых полустепень захода равна 0
-	//		if (i.second.inpipe == 0) {
-	//			ans.push_back(i.first);
-	//			buf.push_back(i.first);
-	//		}
-	//	}
-	//	for (int i = 0; i < links.size(); i++) {//удаляем связи, в которых участвуют вершины из set ans
-	//		for (int j = 0; j < buf.size(); j++) {
-	//			if ((links[i].incs == buf[j]) || (links[i].outcs == buf[j])) {
-	//				links.erase(i);
-	//			}
-	//		}
-	//	}
-	//	buf.clear();
-	//}
 	cout << "Топологическая сортировка:" << endl;
 	for (int i = 0; i < ans.size(); i++)
 		cout << ans[i] << " ";
