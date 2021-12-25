@@ -2,31 +2,77 @@ Pipe
 0
 123
 321
+2
+3
 Compressor Station
 0
 aboba man
 3
 2
 1
+1
+1
 Pipe
-2
+1
 12
 32
+2
+5
 Compressor Station
 1
 ahahah
 5
 3
 2
+1
+0
+Pipe
+2
+2222
+2222
+5
+1
 Pipe
 3
-2222
-2222
+3333
+3333
+5
+0
 Pipe
 4
-3333
-3333
-Pipe
+4444
+4444
+0
+4
+Compressor Station
+2
+aaa
 5
-4444
-4444
+3
+2
+0
+2
+Compressor Station
+3
+hhh
+5
+3
+2
+1
+0
+Compressor Station
+4
+bbbb
+5
+3
+2
+1
+0
+Compressor Station
+5
+ccccc
+5
+3
+2
+1
+2

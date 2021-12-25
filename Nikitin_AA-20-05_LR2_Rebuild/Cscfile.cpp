@@ -16,7 +16,6 @@ CompressorStation::CompressorStation()
 	this->kol = 0;
 	this->kolinwork = 0;
 	this->effectiveness = 0;
-	this->conpipe = 0;
 }
 
 istream& operator>> (istream& in, CompressorStation& cs) {

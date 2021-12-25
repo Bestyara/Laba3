@@ -12,7 +12,8 @@ public:
 	int kol;
 	int kolinwork;
 	double effectiveness;
-	int conpipe;
+	int inpipe = 0;
+	int outpipe = 0;
 	CompressorStation();//конструктор
 	friend istream& operator>> (istream&, CompressorStation& cs);//перегрузка ввода
 	friend ostream& operator<< (ostream&, const unordered_map <int, CompressorStation>&);//перегрузка вывода

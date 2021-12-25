@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
-#include <vector>
+#include <set>
 #include <unordered_map>
 #include "Network.h"
 #include "StructCSpair.h"
@@ -295,9 +295,10 @@ void Network::savefilestation(ofstream& filesave) {
 		filesave << "Нет данных о КС" << endl;
 }
 
-void Network::loadfilepipe(ifstream& fileload) {
+void Network::loadnetwork(ifstream& fileload) {
 	string str;
 	Pipe p;
+	CompressorStation cs;
 	while (!fileload.eof()) {
 		getline(fileload, str);
 		if (str == "Pipe") {
@@ -311,34 +312,22 @@ void Network::loadfilepipe(ifstream& fileload) {
 				PipeMap[strid].d = stoi(str);
 				getline(fileload, str);//считываем длину
 				PipeMap[strid].l = stoi(str);
+				getline(fileload, str);//считываем длину
+				PipeMap[strid].inid = stoi(str);
+				getline(fileload, str);//считываем длину
+				PipeMap[strid].outid = stoi(str);
 			}
 			else {
 				getline(fileload, str);//считываем диаметр
 				p.d = stoi(str);
 				getline(fileload, str);//считываем длину
 				p.l = stoi(str);
+				getline(fileload, str);//считываем длину
+				p.inid = stoi(str);
+				getline(fileload, str);//считываем длину
+				p.outid = stoi(str);
 				PipeMap.insert(pair <int, Pipe>(strid, p));
 			}
-		}
-		else if (str == "Compressor Station") {
-			getline(fileload, str);
-			getline(fileload, str);
-			getline(fileload, str);
-			getline(fileload, str);
-			getline(fileload, str);
-		}
-	}
-}
-
-void Network::loadfilestation(ifstream& fileload) {
-	string str;
-	CompressorStation cs;
-	while (!fileload.eof()) {
-		getline(fileload, str);
-		if (str == "Pipe") {
-			getline(fileload, str);
-			getline(fileload, str);
-			getline(fileload, str);
 		}
 		else if (str == "Compressor Station") {
 			int strid;
@@ -355,6 +344,10 @@ void Network::loadfilestation(ifstream& fileload) {
 				CSMap[strid].kolinwork = stoi(str);
 				getline(fileload, str);//считываем эффективность
 				CSMap[strid].effectiveness = stoi(str);
+				getline(fileload, str);//считываем
+				CSMap[strid].inpipe = stoi(str);
+				getline(fileload, str);//считываем
+				CSMap[strid].outpipe = stoi(str);
 			}
 			else {
 				getline(fileload, str);//считываем название
@@ -365,11 +358,113 @@ void Network::loadfilestation(ifstream& fileload) {
 				cs.kolinwork = stoi(str);
 				getline(fileload, str);//считываем эффективность
 				cs.effectiveness = stoi(str);
+				getline(fileload, str);//считываем входящие трубы
+				cs.inpipe = stoi(str);
+				getline(fileload, str);//считываем исходящие трубы
+				cs.outpipe = stoi(str);
 				CSMap.insert(pair <int, CompressorStation>(strid, cs));
 			}
 		}
 	}
+	if (PipeMap.size() != 0) {
+		for (int i = 0; i < PipeMap.size();i++) {
+			links.insert({ i, {PipeMap[i].inid, PipeMap[i].outid} });
+		}
+	}
 }
+
+//void Network::loadfilepipe(ifstream& fileload) {
+//	string str;
+//	Pipe p;
+//	while (!fileload.eof()) {
+//		getline(fileload, str);
+//		if (str == "Pipe") {
+//			int strid;
+//			getline(fileload, str);//считываем id
+//			strid = stoi(str);
+//			if (Pipe::id < strid)
+//				Pipe::id = strid;
+//			if (PipeMap.count(strid) != 0) {
+//				getline(fileload, str);//считываем диаметр
+//				PipeMap[strid].d = stoi(str);
+//				getline(fileload, str);//считываем длину
+//				PipeMap[strid].l = stoi(str);
+//				getline(fileload, str);//считываем длину
+//				PipeMap[strid].inid = stoi(str);
+//				getline(fileload, str);//считываем длину
+//				PipeMap[strid].outid = stoi(str);
+//			}
+//			else {
+//				getline(fileload, str);//считываем диаметр
+//				p.d = stoi(str);
+//				getline(fileload, str);//считываем длину
+//				p.l = stoi(str);
+//				getline(fileload, str);//считываем длину
+//				p.inid = stoi(str);
+//				getline(fileload, str);//считываем длину
+//				p.outid = stoi(str);
+//				PipeMap.insert(pair <int, Pipe>(strid, p));
+//			}
+//		}
+//		else if (str == "Compressor Station") {
+//			getline(fileload, str);
+//			getline(fileload, str);
+//			getline(fileload, str);
+//			getline(fileload, str);
+//			getline(fileload, str);
+//		}
+//	}
+//}
+
+
+//void Network::loadfilestation(ifstream& fileload) {
+//	string str;
+//	CompressorStation cs;
+//	while (!fileload.eof()) {
+//		getline(fileload, str);
+//		if (str == "Pipe") {
+//			getline(fileload, str);
+//			getline(fileload, str);
+//			getline(fileload, str);
+//		}
+//		else if (str == "Compressor Station") {
+//			int strid;
+//			getline(fileload, str);//считываем id
+//			strid = stoi(str);
+//			if (CompressorStation::id < strid)
+//				CompressorStation::id = strid;
+//			if (CSMap.count(strid) != 0) {
+//				getline(fileload, str);//считываем название
+//				CSMap[strid].name = str;
+//				getline(fileload, str);//считываем кол-во цехов
+//				CSMap[strid].kol = stoi(str);
+//				getline(fileload, str);//считываем кол-во рабочих цехов
+//				CSMap[strid].kolinwork = stoi(str);
+//				getline(fileload, str);//считываем эффективность
+//				CSMap[strid].effectiveness = stoi(str);
+//				getline(fileload, str);//считываем
+//				CSMap[strid].inpipe = stoi(str);
+//				getline(fileload, str);//считываем
+//				CSMap[strid].outpipe = stoi(str);
+//			}
+//			else {
+//				getline(fileload, str);//считываем название
+//				cs.name = str;
+//				getline(fileload, str);//считываем кол-во цехов
+//				cs.kol = stoi(str);
+//				getline(fileload, str);//считываем кол-во рабочих цехов
+//				cs.kolinwork = stoi(str);
+//				getline(fileload, str);//считываем эффективность
+//				cs.effectiveness = stoi(str);
+//				getline(fileload, str);//считываем входящие трубы
+//				cs.inpipe = stoi(str);
+//				getline(fileload, str);//считываем исходящие трубы
+//				cs.outpipe = stoi(str);
+//				CSMap.insert(pair <int, CompressorStation>(strid, cs));
+//			}
+//		}
+//	}
+//}
 
 void Network::connect() {
 	if (PipeMap.size() != 0) {
@@ -380,7 +475,6 @@ void Network::connect() {
 				cout << "Трубы с данным id не существует, попробуйте еще раз" << endl;
 				id = proverkavvodaint();
 			}
-			//cout << CSMap.size();
 			if (CSMap.size() >= 2) {
 				cout << "Введите ID первой КС, которую нужно законнектить: " << endl;
 				int cs1 = proverkavvodaint();
@@ -394,11 +488,12 @@ void Network::connect() {
 					cout << "КС с данным id не существует, попробуйте еще раз" << endl;
 					cs2 = proverkavvodaint();
 				}
-				//cout << CSMap[cs1].conpipe << " " << CSMap[cs2].conpipe << endl;
-				if ((CSMap[cs1].conpipe < CSMap[cs1].kol) && (CSMap[cs2].conpipe < CSMap[cs2].kol) && (cs1 != cs2)) {
-					links.insert(pair <int, paircs>(id, { cs1, cs2 }));
-					CSMap[cs1].conpipe++;
-					CSMap[cs2].conpipe++;
+				if (((CSMap[cs1].inpipe + CSMap[cs1].outpipe) < CSMap[cs1].kol)
+					&& ((CSMap[cs2].inpipe + CSMap[cs2].outpipe) < CSMap[cs2].kol)
+					&& (cs1 != cs2)) {//не в сумме, а отдельно 
+					links.insert({ id, {cs1, cs2} });
+					CSMap[cs1].outpipe++;
+					CSMap[cs2].inpipe++;
 					cout << "Подключение произошло" << endl;
 				}
 				else
@@ -408,9 +503,7 @@ void Network::connect() {
 				cout << endl << "Количество КС меньше 2, подключить трубу нельзя/ID трубы неверный" << endl;
 		}
 		else
-		{
 			cout << "Труба с данным ID уже подключена" << endl;
-		}
 	}
 	else
 		cout << "Нет данных о трубах, подключение невозможно" << endl;
@@ -427,16 +520,101 @@ void Network::disconnect() {
 			}
 		}
 		if (links.count(id) != 0) {
-			CSMap[links[id].incs].conpipe--;
-			CSMap[links[id].outcs].conpipe--;
+			CSMap[links[id].incs].inpipe--;
+			CSMap[links[id].outcs].outpipe--;
 			links.erase(id);
 			cout << "Отключение произошло" << endl;
 		}
 		else {
-			cout << "Труба с данным ID не подключена";
+			cout << "Труба с данным ID не подключена" << endl;
 		}
 	}
 	else {
 		cout << "Связей нет, отключение невозможно"<< endl;
+	}
+}
+
+
+void Network::topologicsort() {
+	vector <int> ans;
+	vector <int> buf;
+	vector <int> indbuf;
+	while (links.size() != 0) {
+		for (auto& i : CSMap) {//записываем вершины, в которых полустепень захода равна 0
+			if (i.second.inpipe == 0) {
+				ans.push_back(i.first);
+				buf.push_back(i.first);
+				i.second.inpipe = 9999;
+			}
+		}
+		//for (int i = 0; i < links.size(); i++) {//удаляем связи, в которых участвуют вершины из set ans
+		//	for (int j = 0; j < buf.size(); j++) {
+		//		if (links.count(i) != 0) {
+		//			if ((links[i].incs == buf[j]) || (links[i].outcs == buf[j])) {
+		//				if (links[i].incs == buf[j])
+		//					CSMap[links[i].outcs].inpipe--;
+		//				else
+		//					CSMap[links[i].incs].inpipe--;
+		//				links.erase(i);
+		//			}
+		//		}
+		//	}
+		//}
+		//while (CSMap[k].inpipe + CSMap[k].outpipe != 0 && k < CSMap.size()) {
+		for (auto& i : links) {//удаляем связи, в которых участвуют вершины из ans
+			for (int j = 0; j < buf.size(); j++) {
+				if (links.count(i.first) != 0) {
+					if ((i.second.incs == buf[j]) || (i.second.outcs == buf[j])) {
+						if (i.second.incs == buf[j])
+							CSMap[i.second.outcs].inpipe--;
+						else
+							CSMap[i.second.incs].inpipe--;
+						//links.erase(i);
+						i.second.incs = -1;
+						i.second.outcs = -1;
+						indbuf.push_back(i.first);
+					}
+				}
+			}
+		}
+		buf.clear();
+		for (int i = 0; i < indbuf.size(); i++) {
+			links.erase(indbuf[i]);
+		}
+		indbuf.clear();
+		//cout << CSMap.size() << endl;
+	}
+	for (auto& i : CSMap) {//записываем вершины, в которых полустепень захода равна 0
+		if (i.second.inpipe == 0) {
+			ans.push_back(i.first);
+			i.second.inpipe = 9999;
+		}
+	}
+	//while (links.size() != 0) {
+	//	for (auto& i : CSMap) {//записываем вершины, в которых полустепень захода равна 0
+	//		if (i.second.inpipe == 0) {
+	//			ans.push_back(i.first);
+	//			buf.push_back(i.first);
+	//		}
+	//	}
+	//	for (int i = 0; i < links.size(); i++) {//удаляем связи, в которых участвуют вершины из set ans
+	//		for (int j = 0; j < buf.size(); j++) {
+	//			if ((links[i].incs == buf[j]) || (links[i].outcs == buf[j])) {
+	//				links.erase(i);
+	//			}
+	//		}
+	//	}
+	//	buf.clear();
+	//}
+	cout << "Топологическая сортировка:" << endl;
+	for (int i = 0; i < ans.size(); i++)
+		cout << ans[i] << " ";
+	cout << endl;
+}
+
+void Network::showlinks() {
+	cout << "Связи: " << endl;
+	for (auto& i : links) {
+		cout << i.second.incs << " " << i.second.outcs << endl;
 	}
 }

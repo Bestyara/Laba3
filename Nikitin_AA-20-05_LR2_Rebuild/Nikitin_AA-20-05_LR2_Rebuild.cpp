@@ -56,11 +56,13 @@ void mainmenu() {
 	cout << "11 - Найти КС по названию, проценту задействованных цехов и выполнить пакетное редактирование" << endl;
 	cout << "12 - Подключить трубы и КС в ГТС" << endl;
 	cout << "13 - Отключить трубу из ГТС" << endl;
+	cout << "14 - Топологи в деле" << endl;
+	cout << "15 - Посмотреть связи" << endl;
 	cout << "0 - Выход" << endl << endl;
 }
 
 void proverkamenu(const int& menu) {
-	if ((menu > 13) || (menu < 0)) {
+	if ((menu > 17) || (menu < 0)) {
 		cout << "Введите другое число" << endl;
 	}
 }
@@ -138,10 +140,11 @@ int main()
 				cout << "Файл для считывания информации не был создан" << endl;
 			}
 			else {
-				seti.loadfilepipe(fileload);
-				fileload.close();
-				ifstream fileload(filenam + ".txt");
-				seti.loadfilestation(fileload);
+				//seti.loadfilepipe(fileload);//loadnetwork
+				//fileload.close();
+				//ifstream fileload(filenam + ".txt");
+				//seti.loadfilestation(fileload);
+				seti.loadnetwork(fileload);
 				fileload.close();
 			}
 			break;
@@ -168,6 +171,14 @@ int main()
 		}
 		case 13: {
 			seti.disconnect();
+			break;
+		}
+		case 14 : {
+			seti.topologicsort();
+			break;
+		}
+		case 15: {
+			seti.showlinks();
 			break;
 		}
 		}

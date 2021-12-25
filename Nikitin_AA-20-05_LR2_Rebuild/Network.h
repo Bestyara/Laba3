@@ -19,10 +19,13 @@ public:
 	void FindandFixStation();
 	void savefilepipe(ofstream&);
 	void savefilestation(ofstream&);
+	void loadnetwork(ifstream&);
 	void loadfilepipe(ifstream&);
 	void loadfilestation(ifstream&);
 	void connect();
 	void disconnect();
+	void topologicsort();
+	void showlinks();
 };
 
 

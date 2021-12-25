@@ -12,6 +12,8 @@ double proverkavvodadouble();
 
 Pipe::Pipe()
 {
+	this->inid = 0;
+	this->outid = 0;
 	this->d = 0;
 	this->l = 0;
 	this->repair = 0;
