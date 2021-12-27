@@ -50,16 +50,18 @@ void Network::DelPipe() {
 void Network::DelStation() {
 	cout << endl << "Введите ID КС, данные о которой нужно удалить (для окончания ввода напишите -1)" << endl;
 	int ch = proverkavvodaint();
-	if (CSMap.count(ch) != 0) {
+	if (CSMap.count(ch) != 0 && CSMap[ch].inpipe == 0 && CSMap[ch].outpipe == 0) {
 		while (ch != -1 && CSMap.count(ch) != 0) {
 			CSMap.erase(CSMap.find(ch));
 			cout << endl << "Введите ID КС, данные о которой нужно удалить (для окончания ввода напишите -1)" << endl;
 			ch = proverkavvodaint();
 		}
 	}
-	else {
+	else if (CSMap.count(ch) == 0) {
 		cout << endl << "Данных о КС с таким ID нет, попробуйте ввести другой ID" << endl;
 	}
+	else if (CSMap[ch].inpipe != 0 || CSMap[ch].outpipe != 0)
+		cout << endl << "К КС подключены несколько труб, удаление КС невозможно" << endl;
 }
 
 void Network::FindandFixPipe() {//поиск и пакетное редактирование труб
@@ -550,6 +552,7 @@ void Network::topologicsort() {
 		if (buf.size() == 0) {
 			cout << "Топологическая сортировка невозможна" << endl;
 			links.clear();
+			return;
 		}
 		for (auto& i : links) {//удаляем связи, в которых участвуют вершины из ans
 			for (int j = 0; j < buf.size(); j++) {
